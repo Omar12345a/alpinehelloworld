@@ -1,93 +1,80 @@
 pipeline {
     environment {
         IMAGE_NAME = 'alpinehelloworld'
-        IMAGE_TAG = "latest"
-        STAGING = "eazytraining-staging"
-        PRODUCTION = "eazytraining-production"
+        IMAGE_TAG = 'latest'
+        STAGING = 'eazytraining-staging'
+        PRODUCTION = 'eazytraining-production'
     }
-    agent none
+    agent any
     stages {
-        stage('build image') {
-            agent any
+        stage('Build image') {
             steps {
                 script {
-                    sh "docker build -t mechena/$IMAGE_NAME:$IMAGE_TAG ."
+                    sh "docker build -t mechena/${IMAGE_NAME}:${IMAGE_TAG} ."
                 }
             }
         }
-
-        stage('Run container based on builded image') {
-            agent any
+        stage('Run container based on built image') {
             steps {
                 script {
                     sh '''
-                    docker run --name $IMAGE_NAME -d -p 80:5000 mechena/$IMAGE_NAME:$IMAGE_TAG
-                    sleep 5s
+                        docker run --name ${IMAGE_NAME} -d -p 80:5000 mechena/${IMAGE_NAME}:${IMAGE_TAG}
+                        sleep 5s
                     '''
                 }
             }
         }
-
         stage('Test image') {
-            agent any
             steps {
                 script {
-                    sh '''
-                    curl http://localhost | grep -q "Hello world!"
-                    '''
+                    sh 'curl http://localhost | grep -q "Hello world!"'
                 }
             }
         }
-
         stage('Clean container') {
-            agent any
             steps {
                 script {
                     sh '''
-                    docker stop $IMAGE_NAME
-                    docker rm $IMAGE_NAME
+                        docker stop ${IMAGE_NAME}
+                        docker rm ${IMAGE_NAME}
                     '''
                 }
             }
         }
-
-        stage('push image in staging and deploy it') {
+        stage('Push image to staging and deploy it') {
             when {
                 expression { GIT_BRANCH == 'origin/master' }
             }
-            agent any
-            environment {
-                HEROKU_API_KEY = credentials('your_credential_id')
-            }
             steps {
                 script {
-                    sh '''
-                    heroku container:login
-                    heroku create $STAGING || echo "project already exists"
-                    heroku container:push -a $STAGING web
-                    heroku container:release -a $STAGING web
-                    '''
+                    withCredentials([string(credentialsId: 'heroku_api_key', variable: 'HEROKU_API_KEY')]) {
+                        sh '''
+                            heroku container:login
+                            heroku create ${STAGING} || echo "Project already exists"
+                            heroku container:push -a ${STAGING} web
+                            heroku container:release -a ${STAGING} web
+                        '''
+                    }
                 }
             }
         }
-
-        stage('push image in production and deploy it') {
+        stage('Push image to production and deploy it') {
             when {
                 expression { GIT_BRANCH == 'origin/master' }
             }
-            agent any
-            environment {
-                HEROKU_API_KEY = credentials('your_credential_id')
-            }
             steps {
                 script {
-                    sh '''
-                    heroku container:login
-                    heroku create $PRODUCTION || echo "project already exists"
-                    heroku container:push -a $PRODUCTION web
-                    heroku container:release -a $PRODUCTION web
-                    '''
+                    withCredentials([string(credentialsId: 'heroku_api_key', variable: 'HEROKU_API_KEY')]) {
+                        sh '''
+                            heroku container:login
+                            heroku create ${PRODUCTION} || echo "Project already exists"
+                            heroku container:push -a ${PRODUCTION} web
+                            heroku container:release -a ${PRODUCTION} web
+                        '''
+                    }
                 }
             }
         }
     }
+}
+
