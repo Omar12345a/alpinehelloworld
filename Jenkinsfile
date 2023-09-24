@@ -47,7 +47,7 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'heroku_api_key', variable: 'HEROKU_API_KEY')]) {
+                    withCredentials([string(credentialsId: 'heroku_aPI_key', variable: 'HEROKU_API_KEY')]) {
                         sh '''
                             heroku container:login
                             heroku create ${STAGING} || echo "Project already exists"
@@ -64,7 +64,7 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'heroku_api_key', variable: 'HEROKU_API_KEY')]) {
+                    withCredentials([string(credentialsId: 'heroku_aPI_key', variable: 'HEROKU_API_KEY')]) {
                         sh '''
                             heroku container:login
                             heroku create ${PRODUCTION} || echo "Project already exists"
