@@ -59,7 +59,7 @@ pipline{
              }
              agent any 
              environement {
-                HEROKU_API_KEY = credentials('heroku_api_key')
+                HEROKU_API_KEY = credentials('heroku_aPI_key')
                     
               } 
              steps {
@@ -79,7 +79,7 @@ pipline{
              }
              agent any 
              environement {
-                HEROKU_API_KEY = credentials('heroku_api_key')
+                HEROKU_API_KEY = credentials('heroku_aPI_key')
                     
               } 
              steps {
