@@ -121,7 +121,7 @@ pipeline {
      always {
      script {
           
-           slackNotifier_dev currentBuild.result
+           slackNotifier currentBuild.result
       }
      }       
     }     
