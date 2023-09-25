@@ -1,5 +1,5 @@
 /*import shared library */
-@Library('omar-shared-library') _
+@Library('omar-shared-library')_
 pipeline {
      environment {
        ID_DOCKER = "${ID_DOCKER_PARAMS}"
