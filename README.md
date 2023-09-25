@@ -1,3 +1,3 @@
 # alpinehelloworld
 An Alpine-based Docker example
-[![Build Status](http://ip10-0-1-3-ck8n364t654gqaevkbeg-8080.direct.docker.labs.eazytraining.fr/buildStatus/icon?job=deploiment)](http://ip10-0-1-3-ck8n364t654gqaevkbeg-8080.direct.docker.labs.eazytraining.fr/job/deploiment/)
+[![Build Status](http://127.0.0.1:8080/buildStatus/icon?job=production)](http://127.0.0.1:8080/job/production/) 
